@@ -1,12 +1,12 @@
 package main;
 
-import gui.GUI;
+import controller.Controller;
 
 public class Main {
 	
-	public static GUI gui;
+	public static Controller controller;
 	
 	public static void main(String args[]){
-		gui = new GUI();
+		controller = new Controller();
 	}
 }

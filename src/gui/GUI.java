@@ -14,9 +14,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.text.NumberFormatter;
 
-import main.Investment;
+import model.Investment;
 
 public class GUI extends JFrame{
 	
@@ -41,15 +42,13 @@ public class GUI extends JFrame{
 		this.setVisible(true);
 		this.setTitle("Investment Calculator");
 		this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
-		NumberFormat nFormat = NumberFormat.getInstance();
-		nFormat.setMaximumFractionDigits(2);
 		DecimalFormat df = (DecimalFormat) DecimalFormat.getInstance();
 		df.setGroupingUsed(false);
-		DecimalFormatSymbols symbols = df.getDecimalFormatSymbols();
 		NumberFormatter formatter = new NumberFormatter(df);
 
-		DecimalFormatSymbols custom=new DecimalFormatSymbols();
+		DecimalFormatSymbols custom = new DecimalFormatSymbols();
 		custom.setDecimalSeparator('.');
 		df.setDecimalFormatSymbols(custom);
 		
@@ -69,22 +68,6 @@ public class GUI extends JFrame{
 		pnlLabelColoumn.setLayout(new BoxLayout(pnlLabelColoumn, BoxLayout.Y_AXIS));
 		
 		btnCalc.setMinimumSize(dimBtn);
-		btnCalc.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(!txtPrincipal.getText().isEmpty() && !txtRateOfInterest.getText().isEmpty() && !txtYears.getText().isEmpty()){
-					Investment investment = new Investment(
-							Double.parseDouble(txtPrincipal.getText()), Double.parseDouble(txtRateOfInterest.getText()),
-							Integer.parseInt(txtYears.getText()));
-					
-					lblOutput.setText("After " + investment.getYears() + " years at " + investment.getRateOfInterest() +
-							"%, the investment will be worth $" + nFormat.format(investment.getAccrued()));
-					
-				} else {
-					JOptionPane.showMessageDialog(getContentPane(), "All fields have to be filled in.");
-				}
-			}
-		});
 		
 		this.add(pnlWrapper);
 		this.add(pnlOutput);
@@ -102,5 +85,33 @@ public class GUI extends JFrame{
 		
 		pnlOutput.add(lblOutput);
 		validate();
+	}
+	
+	public void setOutputText(String text){
+		lblOutput.setText(text);
+	}
+	
+	public boolean areTextfieldsFilled(){
+		return !txtPrincipal.getText().isEmpty() && !txtRateOfInterest.getText().isEmpty() && !txtYears.getText().isEmpty();
+	}
+	
+	public double getPrincipalValue(){
+		return Double.parseDouble(txtPrincipal.getText());
+	}
+	
+	public double getRateOfInterestValue(){
+		return Double.parseDouble(txtRateOfInterest.getText());
+	}
+	
+	public int getYearsValue(){
+		return Integer.parseInt(txtYears.getText());
+	}
+	
+	public void showMessage(String msg){
+		JOptionPane.showMessageDialog(getContentPane(), msg);
+	}
+	
+	public void addBtnCalcActionListener(ActionListener act){
+		btnCalc.addActionListener(act);
 	}
 }
